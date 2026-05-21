@@ -1,0 +1,36 @@
+{
+  "name": "cesium-sdk",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "A Cesium-based GIS SDK for urban planning, emergency command, military simulation, and data visualization",
+  "main": "./dist/cesium-sdk.cjs",
+  "module": "./dist/cesium-sdk.es.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/cesium-sdk.es.js",
+      "require": "./dist/cesium-sdk.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "typecheck": "tsc --noEmit",
+    "clean": "node -e \"fs.rmSync('dist',{recursive:true,force:true})\""
+  },
+  "peerDependencies": {
+    "cesium": "^1.136.0"
+  },
+  "devDependencies": {
+    "cesium": "1.136.0",
+    "typescript": "^5.7.0",
+    "vite": "^6.3.0",
+    "vite-plugin-dts": "^4.5.0"
+  },
+  "license": "MIT"
+}
