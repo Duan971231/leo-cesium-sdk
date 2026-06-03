@@ -14,9 +14,6 @@ const LEVEL_LABELS: Record<LogLevel, string> = {
   [LogLevel.SILENT]: '',
 };
 
-/**
- * 分级日志器
- */
 export class Logger {
   private level: LogLevel;
   private readonly prefix: string;
@@ -69,7 +66,6 @@ export class Logger {
     }
   }
 
-  /** 创建子 logger */
   child(subPrefix: string): Logger {
     const child = new Logger(`${this.prefix}:${subPrefix}`, this.level);
     return child;

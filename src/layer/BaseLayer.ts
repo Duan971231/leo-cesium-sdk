@@ -31,10 +31,12 @@ export abstract class BaseLayer<T = unknown> extends EventEmitter<LayerEvents> {
   }
 
   get visible(): boolean {
+    this.ensureNotRemoved();
     return this._visible;
   }
 
   set visible(val: boolean) {
+    this.ensureNotRemoved();
     if (this._visible === val) return;
     this._visible = val;
     this.applyVisibility(val);
@@ -59,9 +61,19 @@ export abstract class BaseLayer<T = unknown> extends EventEmitter<LayerEvents> {
     this.removeAllListeners();
   }
 
-  /** 获取 Cesium 原生对象（类型安全） */
+  /**
+   * 获取 Cesium 原生对象（类型安全）
+   */
   abstract getCesiumTarget(): T;
 
-  /** 子类实现具体的可见性切换 */
+  /**
+   * 子类实现具体的可见性切换
+   */
   protected abstract applyVisibility(visible: boolean): void;
+
+  protected ensureNotRemoved(): void {
+    if (this._removed) {
+      throw new SDKError(ErrorCode.RESOURCE_DISPOSED, `Layer "${this.id}" is disposed`);
+    }
+  }
 }

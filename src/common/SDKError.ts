@@ -1,6 +1,3 @@
-/**
- * SDK 统一错误码
- */
 export enum ErrorCode {
   VIEWER_NOT_INITIALIZED = 'VIEWER_NOT_INITIALIZED',
   VIEWER_ALREADY_EXISTS = 'VIEWER_ALREADY_EXISTS',
@@ -16,9 +13,6 @@ export enum ErrorCode {
   UNKNOWN = 'UNKNOWN',
 }
 
-/**
- * SDK 统一错误类
- */
 export class SDKError extends Error {
   readonly code: ErrorCode;
   readonly detail?: unknown;

@@ -4,30 +4,32 @@ import { ImageryLayer } from './ImageryLayer';
 import { LayerType } from './LayerType';
 import { Logger } from '../common/Logger';
 import { SDKError, ErrorCode } from '../common/SDKError';
+import { ValidationUtil } from '../util/ValidationUtil';
 
 export interface AddImageryLayerOptions {
   id?: string;
   opacity?: number;
 }
 
-/**
- * 图层管理器：统一图层 CRUD
- */
 export class LayerManager {
   private readonly layers = new Map<string, BaseLayer>();
   private readonly viewer: Cesium.Viewer;
   private readonly logger = new Logger('LayerManager');
+  private nextLayerId = 0;
 
   constructor(viewer: Cesium.Viewer) {
     this.viewer = viewer;
   }
 
-  /** 添加影像图层 */
   addImageryLayer(
     provider: Cesium.ImageryProvider,
     options?: AddImageryLayerOptions,
   ): ImageryLayer {
-    const id = options?.id ?? `imagery_${this.layers.size}`;
+    this.validateProvider(provider);
+    ValidationUtil.opacity(options?.opacity, 'Layer opacity');
+
+    const id = options?.id ?? this.createImageryLayerId();
+    ValidationUtil.id(id, 'Layer id');
     this.ensureNotExists(id);
 
     const layer = new ImageryLayer(id, provider, { opacity: options?.opacity });
@@ -37,17 +39,14 @@ export class LayerManager {
     return layer;
   }
 
-  /** 获取图层 */
   get<T extends BaseLayer = BaseLayer>(id: string): T | undefined {
     return this.layers.get(id) as T | undefined;
   }
 
-  /** 获取所有图层 */
   getAll(): ReadonlyMap<string, BaseLayer> {
-    return this.layers;
+    return new Map(this.layers);
   }
 
-  /** 按类型获取图层 */
   getByType(type: LayerType): BaseLayer[] {
     const result: BaseLayer[] = [];
     for (const layer of this.layers.values()) {
@@ -56,8 +55,8 @@ export class LayerManager {
     return result;
   }
 
-  /** 移除图层 */
   remove(id: string): boolean {
+    ValidationUtil.id(id, 'Layer id');
     const layer = this.layers.get(id);
     if (!layer) return false;
     layer.remove();
@@ -66,7 +65,6 @@ export class LayerManager {
     return true;
   }
 
-  /** 移除所有图层 */
   removeAll(): void {
     for (const layer of this.layers.values()) {
       layer.remove();
@@ -74,7 +72,6 @@ export class LayerManager {
     this.layers.clear();
   }
 
-  /** 图层数量 */
   get count(): number {
     return this.layers.size;
   }
@@ -84,4 +81,20 @@ export class LayerManager {
       throw new SDKError(ErrorCode.LAYER_ALREADY_EXISTS, `Layer "${id}" already exists`);
     }
   }
+
+  private createImageryLayerId(): string {
+    let id: string;
+    do {
+      id = `imagery_${this.nextLayerId}`;
+      this.nextLayerId += 1;
+    } while (this.layers.has(id));
+    return id;
+  }
+
+  private validateProvider(provider: Cesium.ImageryProvider): void {
+    if (!provider) {
+      throw new SDKError(ErrorCode.INVALID_OPTIONS, 'Imagery provider is required');
+    }
+  }
+
 }

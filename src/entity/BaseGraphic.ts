@@ -7,6 +7,7 @@ import { GraphicType } from './GraphicStyle';
 export interface GraphicEvents {
   [key: string]: unknown;
   visibilityChange: { visible: boolean };
+  updated: undefined;
   removed: undefined;
 }
 
@@ -30,10 +31,12 @@ export abstract class BaseGraphic<T = unknown> extends EventEmitter<GraphicEvent
   }
 
   get visible(): boolean {
+    this.ensureNotRemoved();
     return this._visible;
   }
 
   set visible(val: boolean) {
+    this.ensureNotRemoved();
     if (this._visible === val) return;
     this._visible = val;
     if (this.cesiumEntity) {
@@ -51,6 +54,7 @@ export abstract class BaseGraphic<T = unknown> extends EventEmitter<GraphicEvent
   }
 
   async flyTo(options?: { duration?: number }): Promise<void> {
+    this.ensureNotRemoved();
     if (!this.cesiumEntity || !this.viewer) return;
     await this.viewer.flyTo(this.cesiumEntity, { duration: options?.duration });
   }
@@ -68,14 +72,26 @@ export abstract class BaseGraphic<T = unknown> extends EventEmitter<GraphicEvent
     this.viewer = null;
   }
 
-  /** 获取 Cesium 原生 Entity */
   getCesiumTarget(): T {
-    if (!this.cesiumEntity) {
-      throw new SDKError(ErrorCode.RESOURCE_DISPOSED, `Graphic "${this.id}" is disposed`);
-    }
+    this.ensureNotRemoved();
+    if (!this.cesiumEntity) throw this.createDisposedError();
     return this.cesiumEntity as T;
   }
 
-  /** 将图形附加到 Viewer */
+  protected emitUpdated(): void {
+    this.emit('updated');
+  }
+
+  protected ensureNotRemoved(): void {
+    if (this._removed) throw this.createDisposedError();
+  }
+
+  private createDisposedError(): SDKError {
+    return new SDKError(ErrorCode.RESOURCE_DISPOSED, `Graphic "${this.id}" is disposed`);
+  }
+
+  /**
+   * 将图形附加到 Viewer
+   */
   abstract _attach(viewer: Cesium.Viewer): void;
 }

@@ -3,15 +3,9 @@ import { Logger } from "../common/Logger";
 
 const logger = new Logger("MemoryUtil");
 
-// 内部 Cesium API 类型断言辅助
 type AnyCesium = Record<string, unknown>;
 
-/**
- * Cesium 全局静态资源清理
- * 基于 Cesium 1.136.0 内存泄漏分析
- */
 export const MemoryUtil = {
-  /** 清理所有可清理的全局静态缓存 */
   cleanupCesiumGlobals(): void {
     this.clearRenderStateCache();
     this.clearRequestScheduler();
@@ -20,7 +14,6 @@ export const MemoryUtil = {
     logger.info("Cesium global caches cleaned up");
   },
 
-  /** 清理 RenderState 缓存 */
   clearRenderStateCache(): void {
     try {
       const RS = Cesium as unknown as {
@@ -32,7 +25,6 @@ export const MemoryUtil = {
     }
   },
 
-  /** 清理 RequestScheduler 状态 */
   clearRequestScheduler(): void {
     try {
       const RS = Cesium as unknown as {
@@ -44,7 +36,6 @@ export const MemoryUtil = {
     }
   },
 
-  /** 清理 ResourceCache */
   clearResourceCache(): void {
     try {
       const RC = Cesium as unknown as {
@@ -66,7 +57,6 @@ export const MemoryUtil = {
     }
   },
 
-  /** 销毁解码 Worker */
   destroyDecoderWorkers(): void {
     try {
       const DL = Cesium as unknown as {
@@ -86,7 +76,6 @@ export const MemoryUtil = {
     }
   },
 
-  /** 丢失 WebGL 上下文（可选的彻底清理） */
   loseWebGLContext(scene: Cesium.Scene): void {
     try {
       const ctx = (

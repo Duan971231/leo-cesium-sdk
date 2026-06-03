@@ -4,6 +4,7 @@ import { GraphicType, PolylineStyle } from './GraphicStyle';
 import { CoordinateUtil } from '../util/CoordinateUtil';
 import type { WGS84Coordinate } from '../util/CoordinateUtil';
 import { ColorUtil } from '../util/ColorUtil';
+import { ValidationUtil } from '../util/ValidationUtil';
 
 const DEFAULT_POLYLINE_STYLE: Required<PolylineStyle> = {
   width: 2,
@@ -15,26 +16,80 @@ const DEFAULT_POLYLINE_STYLE: Required<PolylineStyle> = {
  * 线图形
  */
 export class PolylineGraphic extends BaseGraphic {
-  private readonly positions: WGS84Coordinate[];
-  private readonly style: Required<PolylineStyle>;
+  private positions: WGS84Coordinate[];
+  private style: Required<PolylineStyle>;
 
   constructor(id: string, positions: WGS84Coordinate[], style?: PolylineStyle) {
     super(id, GraphicType.POLYLINE);
-    this.positions = positions;
+    ValidationUtil.positions(positions, 2, 'Polyline');
+    this.validateStyle(style);
+    this.positions = positions.map((position) => ({ ...position }));
     this.style = { ...DEFAULT_POLYLINE_STYLE, ...style };
+  }
+
+  getPositions(): WGS84Coordinate[] {
+    this.ensureNotRemoved();
+    return this.positions.map((position) => ({ ...position }));
+  }
+
+  setPositions(positions: WGS84Coordinate[]): this {
+    this.ensureNotRemoved();
+    ValidationUtil.positions(positions, 2, 'Polyline');
+    this.positions = positions.map((position) => ({ ...position }));
+    if (this.cesiumEntity?.polyline) {
+      this.cesiumEntity.polyline.positions = new Cesium.ConstantProperty(
+        CoordinateUtil.toCartesians(this.positions),
+      );
+    }
+    this.emitUpdated();
+    return this;
+  }
+
+  getStyle(): Required<PolylineStyle> {
+    this.ensureNotRemoved();
+    return { ...this.style };
+  }
+
+  setStyle(style: PolylineStyle): this {
+    this.ensureNotRemoved();
+    this.validateStyle(style);
+    this.style = { ...this.style, ...style };
+    this.applyStyle();
+    this.emitUpdated();
+    return this;
   }
 
   _attach(viewer: Cesium.Viewer): void {
     this.viewer = viewer;
-    const cartesians = CoordinateUtil.toCartesians(this.positions);
     this.cesiumEntity = viewer.entities.add({
       id: this.id,
-      polyline: {
-        positions: cartesians,
-        width: this.style.width,
-        material: ColorUtil.fromCss(this.style.color),
-        clampToGround: this.style.clampToGround,
-      },
+      polyline: this.createPolylineOptions(),
     });
+  }
+
+  private applyStyle(): void {
+    if (!this.cesiumEntity?.polyline) return;
+    this.cesiumEntity.polyline.width = new Cesium.ConstantProperty(this.style.width);
+    this.cesiumEntity.polyline.material = new Cesium.ColorMaterialProperty(
+      ColorUtil.fromCss(this.style.color),
+    );
+    this.cesiumEntity.polyline.clampToGround = new Cesium.ConstantProperty(
+      this.style.clampToGround,
+    );
+  }
+
+  private createPolylineOptions(): Cesium.PolylineGraphics.ConstructorOptions {
+    return {
+      positions: CoordinateUtil.toCartesians(this.positions),
+      width: this.style.width,
+      material: ColorUtil.fromCss(this.style.color),
+      clampToGround: this.style.clampToGround,
+    };
+  }
+
+  private validateStyle(style?: PolylineStyle): void {
+    if (!style) return;
+    ValidationUtil.positiveNumber(style.width, 'Polyline width');
+    ValidationUtil.cssColor(style.color, 'Polyline color');
   }
 }

@@ -12,11 +12,7 @@ export interface ScreenCoordinate {
   y: number;
 }
 
-/**
- * 坐标转换工具：WGS84 / Cartesian3 / Screen 互转
- */
 export const CoordinateUtil = {
-  /** WGS84 → Cartesian3 */
   toCartesian(coord: WGS84Coordinate): Cesium.Cartesian3 {
     return Cesium.Cartesian3.fromDegrees(
       coord.longitude,
@@ -25,7 +21,6 @@ export const CoordinateUtil = {
     );
   },
 
-  /** 批量 WGS84 → Cartesian3 */
   toCartesians(coords: WGS84Coordinate[]): Cesium.Cartesian3[] {
     const positions: number[] = [];
     for (const c of coords) {
@@ -34,7 +29,6 @@ export const CoordinateUtil = {
     return Cesium.Cartesian3.fromDegreesArrayHeights(positions);
   },
 
-  /** Cartesian3 → WGS84 */
   toWGS84(cartesian: Cesium.Cartesian3): WGS84Coordinate {
     const cartographic = Cesium.Cartographic.fromCartesian(cartesian);
     if (!cartographic) {
@@ -50,7 +44,6 @@ export const CoordinateUtil = {
     };
   },
 
-  /** Cartesian3 → 屏幕坐标 */
   toScreen(cartesian: Cesium.Cartesian3, scene: Cesium.Scene): ScreenCoordinate {
     const result = Cesium.SceneTransforms.worldToWindowCoordinates(scene, cartesian);
     if (!result) {
@@ -62,7 +55,6 @@ export const CoordinateUtil = {
     return { x: result.x, y: result.y };
   },
 
-  /** 屏幕坐标 → Cartesian3（射线与椭球面交点） */
   fromScreen(screen: ScreenCoordinate, scene: Cesium.Scene): Cesium.Cartesian3 {
     const ray = scene.camera.getPickRay(new Cesium.Cartesian2(screen.x, screen.y));
     if (!ray) {
@@ -81,19 +73,16 @@ export const CoordinateUtil = {
     return cartesian;
   },
 
-  /** 屏幕坐标 → WGS84 */
   screenToWGS84(screen: ScreenCoordinate, scene: Cesium.Scene): WGS84Coordinate {
     const cartesian = this.fromScreen(screen, scene);
     return this.toWGS84(cartesian);
   },
 
-  /** WGS84 → 屏幕坐标 */
   wgs84ToScreen(coord: WGS84Coordinate, scene: Cesium.Scene): ScreenCoordinate {
     const cartesian = this.toCartesian(coord);
     return this.toScreen(cartesian, scene);
   },
 
-  /** 判断 Cartesian3 是否有效（非 NaN、非 Infinity） */
   isValid(cartesian: Cesium.Cartesian3): boolean {
     return (
       Cesium.defined(cartesian) &&

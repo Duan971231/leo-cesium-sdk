@@ -6,9 +6,6 @@ import { Logger } from "../common/Logger";
 import { SDKError, ErrorCode } from "../common/SDKError";
 import { MemoryUtil } from "../util/MemoryUtil";
 
-/**
- * Viewer 生命周期管理
- */
 export class ViewerManager {
   private viewer: Cesium.Viewer | null = null;
   private readonly container: string | HTMLElement;
@@ -29,18 +26,15 @@ export class ViewerManager {
     return this._isReady;
   }
 
-  /** 获取 Viewer 实例 */
   getViewer(): Cesium.Viewer {
     this.ensureReady();
     return this.viewer!;
   }
 
-  /** 类型安全的 escape hatch */
   getCesiumTarget(): Cesium.Viewer {
     return this.getViewer();
   }
 
-  /** 初始化 Viewer */
   async init(): Promise<void> {
     if (this.viewer) {
       throw new SDKError(
@@ -52,6 +46,7 @@ export class ViewerManager {
     await this.lifecycle.emit("beforeInit");
 
     const cesiumOptions: Cesium.Viewer.ConstructorOptions = {
+      baseLayer: this.options.baseLayer,
       baseLayerPicker: this.options.baseLayerPicker,
       geocoder: this.options.geocoder,
       homeButton: this.options.homeButton,
@@ -84,7 +79,6 @@ export class ViewerManager {
     await this.lifecycle.emit("afterInit");
   }
 
-  /** 销毁 Viewer */
   async destroy(): Promise<void> {
     if (!this.viewer) return;
 

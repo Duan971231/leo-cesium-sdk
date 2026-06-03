@@ -1,6 +1,7 @@
 import * as Cesium from 'cesium';
 import type { WGS84Coordinate } from '../util/CoordinateUtil';
 import { CoordinateUtil } from '../util/CoordinateUtil';
+import { ValidationUtil } from '../util/ValidationUtil';
 
 export interface ViewpointData {
   longitude: number;
@@ -11,9 +12,6 @@ export interface ViewpointData {
   roll?: number;
 }
 
-/**
- * 视点数据模型
- */
 export class Viewpoint {
   readonly longitude: number;
   readonly latitude: number;
@@ -23,6 +21,7 @@ export class Viewpoint {
   readonly roll: number;
 
   constructor(data: ViewpointData) {
+    ValidationUtil.viewpoint(data);
     this.longitude = data.longitude;
     this.latitude = data.latitude;
     this.height = data.height;
@@ -31,7 +30,6 @@ export class Viewpoint {
     this.roll = data.roll ?? 0;
   }
 
-  /** 转为纯数据对象 */
   toObject(): ViewpointData {
     return {
       longitude: this.longitude,
@@ -43,7 +41,6 @@ export class Viewpoint {
     };
   }
 
-  /** 从 Cartesian3 + 相机朝向构造 */
   static fromCartesian(
     cartesian: Cesium.Cartesian3,
     heading = 0,
@@ -61,7 +58,6 @@ export class Viewpoint {
     });
   }
 
-  /** 从 Cesium.Camera 当前状态构造 */
   static fromCamera(camera: Cesium.Camera): Viewpoint {
     const wgs84 = CoordinateUtil.toWGS84(camera.positionWC);
     return new Viewpoint({
@@ -74,7 +70,6 @@ export class Viewpoint {
     });
   }
 
-  /** 转为 Cesium.Cartesian3 位置 */
   toCartesian(): Cesium.Cartesian3 {
     return CoordinateUtil.toCartesian(this.toObject());
   }

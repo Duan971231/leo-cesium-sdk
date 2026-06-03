@@ -5,4 +5,4 @@ export { PointGraphic } from './PointGraphic';
 export { PolylineGraphic } from './PolylineGraphic';
 export { PolygonGraphic } from './PolygonGraphic';
 export { GraphicType } from './GraphicStyle';
-export type { PointStyle, PolylineStyle, PolygonStyle, BillboardStyle, ModelStyle } from './GraphicStyle';
+export type { PointStyle, PolylineStyle, PolygonStyle } from './GraphicStyle';

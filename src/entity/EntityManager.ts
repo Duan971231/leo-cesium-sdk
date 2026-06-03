@@ -1,4 +1,4 @@
-import * as Cesium from 'cesium';
+import type * as Cesium from 'cesium';
 import { BaseGraphic } from './BaseGraphic';
 import { PointGraphic } from './PointGraphic';
 import { PolylineGraphic } from './PolylineGraphic';
@@ -6,12 +6,10 @@ import { PolygonGraphic } from './PolygonGraphic';
 import { GraphicType } from './GraphicStyle';
 import { Logger } from '../common/Logger';
 import { SDKError, ErrorCode } from '../common/SDKError';
+import { ValidationUtil } from '../util/ValidationUtil';
 import type { WGS84Coordinate } from '../util/CoordinateUtil';
 import type { PointStyle, PolylineStyle, PolygonStyle } from './GraphicStyle';
 
-/**
- * 实体管理器：统一实体 CRUD
- */
 export class EntityManager {
   private readonly graphics = new Map<string, BaseGraphic>();
   private readonly viewer: Cesium.Viewer;
@@ -21,8 +19,10 @@ export class EntityManager {
     this.viewer = viewer;
   }
 
-  /** 添加点 */
   addPoint(id: string, position: WGS84Coordinate, style?: PointStyle): PointGraphic {
+    ValidationUtil.id(id, 'Entity id');
+    ValidationUtil.coordinate(position);
+    this.validatePointStyle(style);
     this.ensureNotExists(id);
     const graphic = new PointGraphic(id, position, style);
     graphic._attach(this.viewer);
@@ -31,8 +31,10 @@ export class EntityManager {
     return graphic;
   }
 
-  /** 添加线 */
   addPolyline(id: string, positions: WGS84Coordinate[], style?: PolylineStyle): PolylineGraphic {
+    ValidationUtil.id(id, 'Entity id');
+    ValidationUtil.positions(positions, 2, 'Polyline');
+    this.validatePolylineStyle(style);
     this.ensureNotExists(id);
     const graphic = new PolylineGraphic(id, positions, style);
     graphic._attach(this.viewer);
@@ -41,8 +43,10 @@ export class EntityManager {
     return graphic;
   }
 
-  /** 添加多边形 */
   addPolygon(id: string, positions: WGS84Coordinate[], style?: PolygonStyle): PolygonGraphic {
+    ValidationUtil.id(id, 'Entity id');
+    ValidationUtil.positions(positions, 3, 'Polygon');
+    this.validatePolygonStyle(style);
     this.ensureNotExists(id);
     const graphic = new PolygonGraphic(id, positions, style);
     graphic._attach(this.viewer);
@@ -51,17 +55,14 @@ export class EntityManager {
     return graphic;
   }
 
-  /** 获取图形 */
   get<T extends BaseGraphic = BaseGraphic>(id: string): T | undefined {
     return this.graphics.get(id) as T | undefined;
   }
 
-  /** 获取所有图形 */
   getAll(): ReadonlyMap<string, BaseGraphic> {
-    return this.graphics;
+    return new Map(this.graphics);
   }
 
-  /** 按类型获取图形 */
   getByType(type: GraphicType): BaseGraphic[] {
     const result: BaseGraphic[] = [];
     for (const g of this.graphics.values()) {
@@ -70,8 +71,8 @@ export class EntityManager {
     return result;
   }
 
-  /** 移除图形 */
   remove(id: string): boolean {
+    ValidationUtil.id(id, 'Entity id');
     const graphic = this.graphics.get(id);
     if (!graphic) return false;
     graphic.remove();
@@ -80,7 +81,6 @@ export class EntityManager {
     return true;
   }
 
-  /** 移除所有图形 */
   removeAll(): void {
     for (const g of this.graphics.values()) {
       g.remove();
@@ -88,7 +88,6 @@ export class EntityManager {
     this.graphics.clear();
   }
 
-  /** 图形数量 */
   get count(): number {
     return this.graphics.size;
   }
@@ -97,5 +96,27 @@ export class EntityManager {
     if (this.graphics.has(id)) {
       throw new SDKError(ErrorCode.ENTITY_ALREADY_EXISTS, `Entity "${id}" already exists`);
     }
+  }
+
+  private validatePointStyle(style?: PointStyle): void {
+    if (!style) return;
+    ValidationUtil.positiveNumber(style.pixelSize, 'Point pixelSize');
+    ValidationUtil.nonNegativeNumber(style.outlineWidth, 'Point outlineWidth');
+    ValidationUtil.cssColor(style.color, 'Point color');
+    ValidationUtil.cssColor(style.outlineColor, 'Point outlineColor');
+  }
+
+  private validatePolylineStyle(style?: PolylineStyle): void {
+    if (!style) return;
+    ValidationUtil.positiveNumber(style.width, 'Polyline width');
+    ValidationUtil.cssColor(style.color, 'Polyline color');
+  }
+
+  private validatePolygonStyle(style?: PolygonStyle): void {
+    if (!style) return;
+    ValidationUtil.cssColor(style.color, 'Polygon color');
+    ValidationUtil.cssColor(style.outlineColor, 'Polygon outlineColor');
+    ValidationUtil.nonNegativeNumber(style.outlineWidth, 'Polygon outlineWidth');
+    ValidationUtil.nonNegativeNumber(style.extrudedHeight, 'Polygon extrudedHeight');
   }
 }

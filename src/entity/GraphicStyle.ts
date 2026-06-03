@@ -21,25 +21,8 @@ export interface PolygonStyle {
   extrudedHeight?: number;
 }
 
-export interface BillboardStyle {
-  image: string;
-  width?: number;
-  height?: number;
-  color?: string;
-  heightReference?: 'none' | 'clamp' | 'relative';
-}
-
-export interface ModelStyle {
-  uri: string;
-  scale?: number;
-  minimumPixelSize?: number;
-  heightReference?: 'none' | 'clamp' | 'relative';
-}
-
 export enum GraphicType {
   POINT = 'point',
   POLYLINE = 'polyline',
   POLYGON = 'polygon',
-  BILLBOARD = 'billboard',
-  MODEL = 'model',
 }

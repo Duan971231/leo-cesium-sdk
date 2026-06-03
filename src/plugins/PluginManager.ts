@@ -15,8 +15,11 @@ export class PluginManager {
     this.sdk = sdk;
   }
 
-  /** 注册并安装插件 */
+  /**
+   * 注册并安装插件
+   */
   async register(plugin: ISDKPlugin): Promise<void> {
+    this.validatePlugin(plugin);
     if (this.plugins.has(plugin.name)) {
       throw new SDKError(
         ErrorCode.PLUGIN_ALREADY_INSTALLED,
@@ -28,7 +31,9 @@ export class PluginManager {
     this.logger.info(`Plugin installed: ${plugin.name}`);
   }
 
-  /** 卸载插件 */
+  /**
+   * 卸载插件
+   */
   async unregister(name: string): Promise<boolean> {
     const plugin = this.plugins.get(name);
     if (!plugin) return false;
@@ -38,17 +43,23 @@ export class PluginManager {
     return true;
   }
 
-  /** 获取插件 */
+  /**
+   * 获取插件
+   */
   get<T extends ISDKPlugin = ISDKPlugin>(name: string): T | undefined {
     return this.plugins.get(name) as T | undefined;
   }
 
-  /** 获取所有已注册插件名称 */
+  /**
+   * 获取所有已注册插件名称
+   */
   getNames(): string[] {
     return Array.from(this.plugins.keys());
   }
 
-  /** 卸载所有插件 */
+  /**
+   * 卸载所有插件
+   */
   async destroyAll(): Promise<void> {
     for (const [name, plugin] of this.plugins) {
       try {
@@ -60,8 +71,25 @@ export class PluginManager {
     this.plugins.clear();
   }
 
-  /** 已注册插件数量 */
+  /**
+   * 已注册插件数量
+   */
   get count(): number {
     return this.plugins.size;
+  }
+
+  private validatePlugin(plugin: ISDKPlugin): void {
+    if (!plugin || typeof plugin !== "object") {
+      throw new SDKError(ErrorCode.INVALID_OPTIONS, "Plugin is required");
+    }
+    if (typeof plugin.name !== "string" || plugin.name.trim().length === 0) {
+      throw new SDKError(ErrorCode.INVALID_OPTIONS, "Plugin name must be a non-empty string");
+    }
+    if (typeof plugin.install !== "function") {
+      throw new SDKError(ErrorCode.INVALID_OPTIONS, "Plugin install must be a function");
+    }
+    if (typeof plugin.destroy !== "function") {
+      throw new SDKError(ErrorCode.INVALID_OPTIONS, "Plugin destroy must be a function");
+    }
   }
 }

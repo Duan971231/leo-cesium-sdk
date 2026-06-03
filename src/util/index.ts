@@ -4,3 +4,5 @@ export { MathUtil } from './MathUtil';
 export { ColorUtil } from './ColorUtil';
 export type { RGBA } from './ColorUtil';
 export { MemoryUtil } from './MemoryUtil';
+export { ValidationUtil } from './ValidationUtil';
+export type { ViewpointLike } from './ValidationUtil';
