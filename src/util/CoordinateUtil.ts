@@ -1,5 +1,5 @@
-import * as Cesium from 'cesium';
-import { SDKError, ErrorCode } from '../common/SDKError';
+import * as Cesium from "cesium";
+import { SDKError, ErrorCode } from "../common/SDKError";
 
 export interface WGS84Coordinate {
   longitude: number;
@@ -34,7 +34,7 @@ export const CoordinateUtil = {
     if (!cartographic) {
       throw new SDKError(
         ErrorCode.COORDINATE_TRANSFORM_FAILED,
-        'Cannot convert Cartesian3 to WGS84',
+        "Cannot convert Cartesian3 to WGS84",
       );
     }
     return {
@@ -44,36 +44,47 @@ export const CoordinateUtil = {
     };
   },
 
-  toScreen(cartesian: Cesium.Cartesian3, scene: Cesium.Scene): ScreenCoordinate {
-    const result = Cesium.SceneTransforms.worldToWindowCoordinates(scene, cartesian);
+  toScreen(
+    cartesian: Cesium.Cartesian3,
+    scene: Cesium.Scene,
+  ): ScreenCoordinate {
+    const result = Cesium.SceneTransforms.worldToWindowCoordinates(
+      scene,
+      cartesian,
+    );
     if (!result) {
       throw new SDKError(
         ErrorCode.COORDINATE_TRANSFORM_FAILED,
-        'Cannot convert Cartesian3 to screen coordinates',
+        "Cannot convert Cartesian3 to screen coordinates",
       );
     }
     return { x: result.x, y: result.y };
   },
 
   fromScreen(screen: ScreenCoordinate, scene: Cesium.Scene): Cesium.Cartesian3 {
-    const ray = scene.camera.getPickRay(new Cesium.Cartesian2(screen.x, screen.y));
+    const ray = scene.camera.getPickRay(
+      new Cesium.Cartesian2(screen.x, screen.y),
+    );
     if (!ray) {
       throw new SDKError(
         ErrorCode.COORDINATE_TRANSFORM_FAILED,
-        'Cannot create pick ray from screen coordinates',
+        "Cannot create pick ray from screen coordinates",
       );
     }
     const cartesian = scene.globe.pick(ray, scene);
     if (!cartesian) {
       throw new SDKError(
         ErrorCode.COORDINATE_TRANSFORM_FAILED,
-        'No intersection with globe',
+        "No intersection with globe",
       );
     }
     return cartesian;
   },
 
-  screenToWGS84(screen: ScreenCoordinate, scene: Cesium.Scene): WGS84Coordinate {
+  screenToWGS84(
+    screen: ScreenCoordinate,
+    scene: Cesium.Scene,
+  ): WGS84Coordinate {
     const cartesian = this.fromScreen(screen, scene);
     return this.toWGS84(cartesian);
   },

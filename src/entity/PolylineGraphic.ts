@@ -1,14 +1,14 @@
-import * as Cesium from 'cesium';
-import { BaseGraphic } from './BaseGraphic';
-import { GraphicType, PolylineStyle } from './GraphicStyle';
-import { CoordinateUtil } from '../util/CoordinateUtil';
-import type { WGS84Coordinate } from '../util/CoordinateUtil';
-import { ColorUtil } from '../util/ColorUtil';
-import { ValidationUtil } from '../util/ValidationUtil';
+import * as Cesium from "cesium";
+import { BaseGraphic } from "./BaseGraphic";
+import { GraphicType, PolylineStyle } from "./GraphicStyle";
+import { CoordinateUtil } from "../util/CoordinateUtil";
+import type { WGS84Coordinate } from "../util/CoordinateUtil";
+import { ColorUtil } from "../util/ColorUtil";
+import { ValidationUtil } from "../util/ValidationUtil";
 
 const DEFAULT_POLYLINE_STYLE: Required<PolylineStyle> = {
   width: 2,
-  color: '#FFFFFF',
+  color: "#FFFFFF",
   clampToGround: false,
 };
 
@@ -21,7 +21,7 @@ export class PolylineGraphic extends BaseGraphic {
 
   constructor(id: string, positions: WGS84Coordinate[], style?: PolylineStyle) {
     super(id, GraphicType.POLYLINE);
-    ValidationUtil.positions(positions, 2, 'Polyline');
+    ValidationUtil.positions(positions, 2, "Polyline");
     this.validateStyle(style);
     this.positions = positions.map((position) => ({ ...position }));
     this.style = { ...DEFAULT_POLYLINE_STYLE, ...style };
@@ -34,7 +34,7 @@ export class PolylineGraphic extends BaseGraphic {
 
   setPositions(positions: WGS84Coordinate[]): this {
     this.ensureNotRemoved();
-    ValidationUtil.positions(positions, 2, 'Polyline');
+    ValidationUtil.positions(positions, 2, "Polyline");
     this.positions = positions.map((position) => ({ ...position }));
     if (this.cesiumEntity?.polyline) {
       this.cesiumEntity.polyline.positions = new Cesium.ConstantProperty(
@@ -69,7 +69,9 @@ export class PolylineGraphic extends BaseGraphic {
 
   private applyStyle(): void {
     if (!this.cesiumEntity?.polyline) return;
-    this.cesiumEntity.polyline.width = new Cesium.ConstantProperty(this.style.width);
+    this.cesiumEntity.polyline.width = new Cesium.ConstantProperty(
+      this.style.width,
+    );
     this.cesiumEntity.polyline.material = new Cesium.ColorMaterialProperty(
       ColorUtil.fromCss(this.style.color),
     );
@@ -89,7 +91,7 @@ export class PolylineGraphic extends BaseGraphic {
 
   private validateStyle(style?: PolylineStyle): void {
     if (!style) return;
-    ValidationUtil.positiveNumber(style.width, 'Polyline width');
-    ValidationUtil.cssColor(style.color, 'Polyline color');
+    ValidationUtil.positiveNumber(style.width, "Polyline width");
+    ValidationUtil.cssColor(style.color, "Polyline color");
   }
 }

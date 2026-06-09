@@ -1,8 +1,8 @@
-import * as Cesium from 'cesium';
-import { EventEmitter } from '../common/EventEmitter';
-import { DisposePool } from '../common/DisposePool';
-import { SDKError, ErrorCode } from '../common/SDKError';
-import { GraphicType } from './GraphicStyle';
+import * as Cesium from "cesium";
+import { EventEmitter } from "../common/EventEmitter";
+import { DisposePool } from "../common/DisposePool";
+import { SDKError, ErrorCode } from "../common/SDKError";
+import { GraphicType } from "./GraphicStyle";
 
 export interface GraphicEvents {
   [key: string]: unknown;
@@ -14,7 +14,9 @@ export interface GraphicEvents {
 /**
  * 图形抽象基类
  */
-export abstract class BaseGraphic<T = unknown> extends EventEmitter<GraphicEvents> {
+export abstract class BaseGraphic<
+  T = unknown,
+> extends EventEmitter<GraphicEvents> {
   readonly id: string;
   readonly type: GraphicType;
   protected readonly disposePool: DisposePool;
@@ -42,7 +44,7 @@ export abstract class BaseGraphic<T = unknown> extends EventEmitter<GraphicEvent
     if (this.cesiumEntity) {
       this.cesiumEntity.show = val;
     }
-    this.emit('visibilityChange', { visible: val });
+    this.emit("visibilityChange", { visible: val });
   }
 
   show(): void {
@@ -66,7 +68,7 @@ export abstract class BaseGraphic<T = unknown> extends EventEmitter<GraphicEvent
       this.viewer.entities.remove(this.cesiumEntity);
     }
     this.disposePool.disposeAll();
-    this.emit('removed');
+    this.emit("removed");
     this.removeAllListeners();
     this.cesiumEntity = null;
     this.viewer = null;
@@ -79,7 +81,7 @@ export abstract class BaseGraphic<T = unknown> extends EventEmitter<GraphicEvent
   }
 
   protected emitUpdated(): void {
-    this.emit('updated');
+    this.emit("updated");
   }
 
   protected ensureNotRemoved(): void {
@@ -87,7 +89,10 @@ export abstract class BaseGraphic<T = unknown> extends EventEmitter<GraphicEvent
   }
 
   private createDisposedError(): SDKError {
-    return new SDKError(ErrorCode.RESOURCE_DISPOSED, `Graphic "${this.id}" is disposed`);
+    return new SDKError(
+      ErrorCode.RESOURCE_DISPOSED,
+      `Graphic "${this.id}" is disposed`,
+    );
   }
 
   /**

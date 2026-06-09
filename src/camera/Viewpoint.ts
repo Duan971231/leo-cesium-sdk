@@ -1,7 +1,7 @@
-import * as Cesium from 'cesium';
-import type { WGS84Coordinate } from '../util/CoordinateUtil';
-import { CoordinateUtil } from '../util/CoordinateUtil';
-import { ValidationUtil } from '../util/ValidationUtil';
+import * as Cesium from "cesium";
+import type { WGS84Coordinate } from "../util/CoordinateUtil";
+import { CoordinateUtil } from "../util/CoordinateUtil";
+import { ValidationUtil } from "../util/ValidationUtil";
 
 export interface ViewpointData {
   longitude: number;

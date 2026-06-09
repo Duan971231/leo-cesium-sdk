@@ -1,17 +1,17 @@
-import * as Cesium from 'cesium';
-import { BaseGraphic } from './BaseGraphic';
-import { GraphicType, PolygonStyle } from './GraphicStyle';
-import { CoordinateUtil } from '../util/CoordinateUtil';
-import type { WGS84Coordinate } from '../util/CoordinateUtil';
-import { ColorUtil } from '../util/ColorUtil';
-import { ValidationUtil } from '../util/ValidationUtil';
+import * as Cesium from "cesium";
+import { BaseGraphic } from "./BaseGraphic";
+import { GraphicType, PolygonStyle } from "./GraphicStyle";
+import { CoordinateUtil } from "../util/CoordinateUtil";
+import type { WGS84Coordinate } from "../util/CoordinateUtil";
+import { ColorUtil } from "../util/ColorUtil";
+import { ValidationUtil } from "../util/ValidationUtil";
 
 const DEFAULT_POLYGON_STYLE: Required<PolygonStyle> = {
-  color: '#FFFFFF',
+  color: "#FFFFFF",
   outline: true,
-  outlineColor: '#000000',
+  outlineColor: "#000000",
   outlineWidth: 1,
-  heightReference: 'none',
+  heightReference: "none",
   extrudedHeight: 0,
 };
 
@@ -24,7 +24,7 @@ export class PolygonGraphic extends BaseGraphic {
 
   constructor(id: string, positions: WGS84Coordinate[], style?: PolygonStyle) {
     super(id, GraphicType.POLYGON);
-    ValidationUtil.positions(positions, 3, 'Polygon');
+    ValidationUtil.positions(positions, 3, "Polygon");
     this.validateStyle(style);
     this.positions = positions.map((position) => ({ ...position }));
     this.style = { ...DEFAULT_POLYGON_STYLE, ...style };
@@ -37,7 +37,7 @@ export class PolygonGraphic extends BaseGraphic {
 
   setPositions(positions: WGS84Coordinate[]): this {
     this.ensureNotRemoved();
-    ValidationUtil.positions(positions, 3, 'Polygon');
+    ValidationUtil.positions(positions, 3, "Polygon");
     this.positions = positions.map((position) => ({ ...position }));
     if (this.cesiumEntity?.polygon) {
       this.cesiumEntity.polygon.hierarchy = new Cesium.ConstantProperty(
@@ -75,7 +75,9 @@ export class PolygonGraphic extends BaseGraphic {
     this.cesiumEntity.polygon.material = new Cesium.ColorMaterialProperty(
       ColorUtil.fromCss(this.style.color).withAlpha(0.5),
     );
-    this.cesiumEntity.polygon.outline = new Cesium.ConstantProperty(this.style.outline);
+    this.cesiumEntity.polygon.outline = new Cesium.ConstantProperty(
+      this.style.outline,
+    );
     this.cesiumEntity.polygon.outlineColor = new Cesium.ConstantProperty(
       ColorUtil.fromCss(this.style.outlineColor),
     );
@@ -99,22 +101,30 @@ export class PolygonGraphic extends BaseGraphic {
   }
 
   private createHierarchy(): Cesium.PolygonHierarchy {
-    return new Cesium.PolygonHierarchy(CoordinateUtil.toCartesians(this.positions));
+    return new Cesium.PolygonHierarchy(
+      CoordinateUtil.toCartesians(this.positions),
+    );
   }
 
   private validateStyle(style?: PolygonStyle): void {
     if (!style) return;
-    ValidationUtil.cssColor(style.color, 'Polygon color');
-    ValidationUtil.cssColor(style.outlineColor, 'Polygon outlineColor');
-    ValidationUtil.nonNegativeNumber(style.outlineWidth, 'Polygon outlineWidth');
-    ValidationUtil.nonNegativeNumber(style.extrudedHeight, 'Polygon extrudedHeight');
+    ValidationUtil.cssColor(style.color, "Polygon color");
+    ValidationUtil.cssColor(style.outlineColor, "Polygon outlineColor");
+    ValidationUtil.nonNegativeNumber(
+      style.outlineWidth,
+      "Polygon outlineWidth",
+    );
+    ValidationUtil.nonNegativeNumber(
+      style.extrudedHeight,
+      "Polygon extrudedHeight",
+    );
   }
 
   private toHeightReference(ref: string): Cesium.HeightReference {
     switch (ref) {
-      case 'clamp':
+      case "clamp":
         return Cesium.HeightReference.CLAMP_TO_GROUND;
-      case 'relative':
+      case "relative":
         return Cesium.HeightReference.RELATIVE_TO_GROUND;
       default:
         return Cesium.HeightReference.NONE;

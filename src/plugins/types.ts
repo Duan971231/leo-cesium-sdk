@@ -1,4 +1,4 @@
-import type { CesiumSDK } from '../CesiumSDK';
+import type { CesiumSDK } from "../CesiumSDK";
 
 export interface ISDKPlugin {
   readonly name: string;

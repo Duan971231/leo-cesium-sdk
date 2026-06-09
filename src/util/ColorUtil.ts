@@ -1,4 +1,4 @@
-import * as Cesium from 'cesium';
+import * as Cesium from "cesium";
 
 export interface RGBA {
   r: number;
@@ -25,9 +25,15 @@ export const ColorUtil = {
   },
 
   toHex(color: Cesium.Color): string {
-    const r = Math.round(color.red * 255).toString(16).padStart(2, '0');
-    const g = Math.round(color.green * 255).toString(16).padStart(2, '0');
-    const b = Math.round(color.blue * 255).toString(16).padStart(2, '0');
+    const r = Math.round(color.red * 255)
+      .toString(16)
+      .padStart(2, "0");
+    const g = Math.round(color.green * 255)
+      .toString(16)
+      .padStart(2, "0");
+    const b = Math.round(color.blue * 255)
+      .toString(16)
+      .padStart(2, "0");
     return `#${r}${g}${b}`;
   },
 

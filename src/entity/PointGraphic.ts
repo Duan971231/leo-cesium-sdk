@@ -1,17 +1,17 @@
-import * as Cesium from 'cesium';
-import { BaseGraphic } from './BaseGraphic';
-import { GraphicType, PointStyle } from './GraphicStyle';
-import { CoordinateUtil } from '../util/CoordinateUtil';
-import type { WGS84Coordinate } from '../util/CoordinateUtil';
-import { ColorUtil } from '../util/ColorUtil';
-import { ValidationUtil } from '../util/ValidationUtil';
+import * as Cesium from "cesium";
+import { BaseGraphic } from "./BaseGraphic";
+import { GraphicType, PointStyle } from "./GraphicStyle";
+import { CoordinateUtil } from "../util/CoordinateUtil";
+import type { WGS84Coordinate } from "../util/CoordinateUtil";
+import { ColorUtil } from "../util/ColorUtil";
+import { ValidationUtil } from "../util/ValidationUtil";
 
 const DEFAULT_POINT_STYLE: Required<PointStyle> = {
   pixelSize: 10,
-  color: '#FFFFFF',
-  outlineColor: '#000000',
+  color: "#FFFFFF",
+  outlineColor: "#000000",
   outlineWidth: 1,
-  heightReference: 'none',
+  heightReference: "none",
 };
 
 /**
@@ -72,14 +72,18 @@ export class PointGraphic extends BaseGraphic {
 
   private applyStyle(): void {
     if (!this.cesiumEntity?.point) return;
-    this.cesiumEntity.point.pixelSize = new Cesium.ConstantProperty(this.style.pixelSize);
+    this.cesiumEntity.point.pixelSize = new Cesium.ConstantProperty(
+      this.style.pixelSize,
+    );
     this.cesiumEntity.point.color = new Cesium.ConstantProperty(
       ColorUtil.fromCss(this.style.color),
     );
     this.cesiumEntity.point.outlineColor = new Cesium.ConstantProperty(
       ColorUtil.fromCss(this.style.outlineColor),
     );
-    this.cesiumEntity.point.outlineWidth = new Cesium.ConstantProperty(this.style.outlineWidth);
+    this.cesiumEntity.point.outlineWidth = new Cesium.ConstantProperty(
+      this.style.outlineWidth,
+    );
     this.cesiumEntity.point.heightReference = new Cesium.ConstantProperty(
       this.toHeightReference(this.style.heightReference),
     );
@@ -97,17 +101,17 @@ export class PointGraphic extends BaseGraphic {
 
   private validateStyle(style?: PointStyle): void {
     if (!style) return;
-    ValidationUtil.positiveNumber(style.pixelSize, 'Point pixelSize');
-    ValidationUtil.nonNegativeNumber(style.outlineWidth, 'Point outlineWidth');
-    ValidationUtil.cssColor(style.color, 'Point color');
-    ValidationUtil.cssColor(style.outlineColor, 'Point outlineColor');
+    ValidationUtil.positiveNumber(style.pixelSize, "Point pixelSize");
+    ValidationUtil.nonNegativeNumber(style.outlineWidth, "Point outlineWidth");
+    ValidationUtil.cssColor(style.color, "Point color");
+    ValidationUtil.cssColor(style.outlineColor, "Point outlineColor");
   }
 
   private toHeightReference(ref: string): Cesium.HeightReference {
     switch (ref) {
-      case 'clamp':
+      case "clamp":
         return Cesium.HeightReference.CLAMP_TO_GROUND;
-      case 'relative':
+      case "relative":
         return Cesium.HeightReference.RELATIVE_TO_GROUND;
       default:
         return Cesium.HeightReference.NONE;

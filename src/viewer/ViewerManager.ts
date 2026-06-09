@@ -60,6 +60,15 @@ export class ViewerManager {
       selectionIndicator: this.options.selectionIndicator,
       shadows: this.options.shadows,
       shouldAnimate: this.options.shouldAnimate,
+      sceneMode: this.options.sceneMode,
+      terrainShadows: this.options.terrainShadows,
+      requestRenderMode: this.options.requestRenderMode,
+      maximumRenderTimeChange: this.options.maximumRenderTimeChange,
+      scene3DOnly: this.options.scene3DOnly,
+      navigationInstructionsInitiallyVisible:
+        this.options.navigationInstructionsInitiallyVisible,
+      projectionPicker: this.options.projectionPicker,
+      creditContainer: this.options.creditContainer,
       ...this.options.extra,
     };
 
@@ -81,7 +90,6 @@ export class ViewerManager {
 
   async destroy(): Promise<void> {
     if (!this.viewer) return;
-
     await this.lifecycle.emit("beforeDestroy");
     this.disposePool.disposeAll();
     this._isReady = false;
@@ -92,12 +100,9 @@ export class ViewerManager {
 
   private destroyViewer(): void {
     if (!this.viewer) return;
-
     this.viewer.useDefaultRenderLoop = false;
     this.viewer.destroy();
-
     MemoryUtil.cleanupCesiumGlobals();
-
     this.viewer = null;
   }
 

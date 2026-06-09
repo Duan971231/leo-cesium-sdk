@@ -3,7 +3,7 @@ export interface PointStyle {
   color?: string;
   outlineColor?: string;
   outlineWidth?: number;
-  heightReference?: 'none' | 'clamp' | 'relative';
+  heightReference?: "none" | "clamp" | "relative";
 }
 
 export interface PolylineStyle {
@@ -17,12 +17,12 @@ export interface PolygonStyle {
   outline?: boolean;
   outlineColor?: string;
   outlineWidth?: number;
-  heightReference?: 'none' | 'clamp' | 'relative';
+  heightReference?: "none" | "clamp" | "relative";
   extrudedHeight?: number;
 }
 
 export enum GraphicType {
-  POINT = 'point',
-  POLYLINE = 'polyline',
-  POLYGON = 'polygon',
+  POINT = "point",
+  POLYLINE = "polyline",
+  POLYGON = "polygon",
 }

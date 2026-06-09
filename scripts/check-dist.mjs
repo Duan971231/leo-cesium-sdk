@@ -1,6 +1,8 @@
 import { readFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 
+const allowConsole = process.argv.includes('--allow-console');
+
 const requiredFiles = [
   'dist/cesium-sdk.es.js',
   'dist/cesium-sdk.cjs',
@@ -41,7 +43,7 @@ for (const bundle of ['dist/cesium-sdk.es.js', 'dist/cesium-sdk.cjs']) {
   if (content.includes('class Viewer') && content.includes('class Cartesian3')) {
     failures.push(`Bundle may contain Cesium implementation code: ${bundle}`);
   }
-  if (/\bconsole\./.test(content)) {
+  if (!allowConsole && /\bconsole\./.test(content)) {
     failures.push(`Bundle contains console calls: ${bundle}`);
   }
   if (/\bdebugger\b/.test(content)) {

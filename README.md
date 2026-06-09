@@ -2,6 +2,10 @@
 
 `@leo_blitz/cesium-sdk` 是一个 framework-agnostic 的 TypeScript Cesium SDK。当前版本聚焦于 Cesium Viewer 生命周期、影像图层、基础 Entity 图形、相机视角控制、插件生命周期和通用工具能力。
 
+## 参考文档地址
+
+`https://duan971231.github.io/leo-cesium-sdk/guide/getting-started`
+
 ## Requirements
 
 - Node.js 18+

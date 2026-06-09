@@ -1,4 +1,8 @@
-export type LifecycleHook = 'beforeInit' | 'afterInit' | 'beforeDestroy' | 'afterDestroy';
+export type LifecycleHook =
+  | "beforeInit"
+  | "afterInit"
+  | "beforeDestroy"
+  | "afterDestroy";
 type LifecycleCallback = () => void | Promise<void>;
 
 export class Lifecycle {

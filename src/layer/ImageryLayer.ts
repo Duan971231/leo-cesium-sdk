@@ -31,7 +31,10 @@ export class ImageryLayer extends BaseLayer<Cesium.ImageryLayer> {
   ) {
     super(id, LayerType.IMAGERY);
     if (!provider) {
-      throw new SDKError(ErrorCode.INVALID_OPTIONS, "Imagery provider is required");
+      throw new SDKError(
+        ErrorCode.INVALID_OPTIONS,
+        "Imagery provider is required",
+      );
     }
     this.imageryProvider = provider;
     this._opacity = options?.opacity ?? options?.alpha ?? 1.0;

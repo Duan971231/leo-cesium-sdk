@@ -83,13 +83,22 @@ export class PluginManager {
       throw new SDKError(ErrorCode.INVALID_OPTIONS, "Plugin is required");
     }
     if (typeof plugin.name !== "string" || plugin.name.trim().length === 0) {
-      throw new SDKError(ErrorCode.INVALID_OPTIONS, "Plugin name must be a non-empty string");
+      throw new SDKError(
+        ErrorCode.INVALID_OPTIONS,
+        "Plugin name must be a non-empty string",
+      );
     }
     if (typeof plugin.install !== "function") {
-      throw new SDKError(ErrorCode.INVALID_OPTIONS, "Plugin install must be a function");
+      throw new SDKError(
+        ErrorCode.INVALID_OPTIONS,
+        "Plugin install must be a function",
+      );
     }
     if (typeof plugin.destroy !== "function") {
-      throw new SDKError(ErrorCode.INVALID_OPTIONS, "Plugin destroy must be a function");
+      throw new SDKError(
+        ErrorCode.INVALID_OPTIONS,
+        "Plugin destroy must be a function",
+      );
     }
   }
 }

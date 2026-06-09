@@ -1,9 +1,9 @@
-import * as Cesium from 'cesium';
-import { EventEmitter } from '../common/EventEmitter';
-import { DisposePool } from '../common/DisposePool';
-import { SDKError, ErrorCode } from '../common/SDKError';
-import { LayerType } from './LayerType';
-import { Logger } from '../common/Logger';
+import * as Cesium from "cesium";
+import { EventEmitter } from "../common/EventEmitter";
+import { DisposePool } from "../common/DisposePool";
+import { SDKError, ErrorCode } from "../common/SDKError";
+import { LayerType } from "./LayerType";
+import { Logger } from "../common/Logger";
 
 export interface LayerEvents {
   [key: string]: unknown;
@@ -40,7 +40,7 @@ export abstract class BaseLayer<T = unknown> extends EventEmitter<LayerEvents> {
     if (this._visible === val) return;
     this._visible = val;
     this.applyVisibility(val);
-    this.emit('visibilityChange', { visible: val });
+    this.emit("visibilityChange", { visible: val });
   }
 
   show(): void {
@@ -57,7 +57,7 @@ export abstract class BaseLayer<T = unknown> extends EventEmitter<LayerEvents> {
     if (this._removed) return;
     this._removed = true;
     this.disposePool.disposeAll();
-    this.emit('removed');
+    this.emit("removed");
     this.removeAllListeners();
   }
 
@@ -73,7 +73,10 @@ export abstract class BaseLayer<T = unknown> extends EventEmitter<LayerEvents> {
 
   protected ensureNotRemoved(): void {
     if (this._removed) {
-      throw new SDKError(ErrorCode.RESOURCE_DISPOSED, `Layer "${this.id}" is disposed`);
+      throw new SDKError(
+        ErrorCode.RESOURCE_DISPOSED,
+        `Layer "${this.id}" is disposed`,
+      );
     }
   }
 }

@@ -1,10 +1,10 @@
-import * as Cesium from 'cesium';
-import { BaseLayer } from './BaseLayer';
-import { ImageryLayer } from './ImageryLayer';
-import { LayerType } from './LayerType';
-import { Logger } from '../common/Logger';
-import { SDKError, ErrorCode } from '../common/SDKError';
-import { ValidationUtil } from '../util/ValidationUtil';
+import * as Cesium from "cesium";
+import { BaseLayer } from "./BaseLayer";
+import { ImageryLayer } from "./ImageryLayer";
+import { LayerType } from "./LayerType";
+import { Logger } from "../common/Logger";
+import { SDKError, ErrorCode } from "../common/SDKError";
+import { ValidationUtil } from "../util/ValidationUtil";
 
 export interface AddImageryLayerOptions {
   id?: string;
@@ -14,7 +14,7 @@ export interface AddImageryLayerOptions {
 export class LayerManager {
   private readonly layers = new Map<string, BaseLayer>();
   private readonly viewer: Cesium.Viewer;
-  private readonly logger = new Logger('LayerManager');
+  private readonly logger = new Logger("LayerManager");
   private nextLayerId = 0;
 
   constructor(viewer: Cesium.Viewer) {
@@ -26,10 +26,10 @@ export class LayerManager {
     options?: AddImageryLayerOptions,
   ): ImageryLayer {
     this.validateProvider(provider);
-    ValidationUtil.opacity(options?.opacity, 'Layer opacity');
+    ValidationUtil.opacity(options?.opacity, "Layer opacity");
 
     const id = options?.id ?? this.createImageryLayerId();
-    ValidationUtil.id(id, 'Layer id');
+    ValidationUtil.id(id, "Layer id");
     this.ensureNotExists(id);
 
     const layer = new ImageryLayer(id, provider, { opacity: options?.opacity });
@@ -56,7 +56,7 @@ export class LayerManager {
   }
 
   remove(id: string): boolean {
-    ValidationUtil.id(id, 'Layer id');
+    ValidationUtil.id(id, "Layer id");
     const layer = this.layers.get(id);
     if (!layer) return false;
     layer.remove();
@@ -78,7 +78,10 @@ export class LayerManager {
 
   private ensureNotExists(id: string): void {
     if (this.layers.has(id)) {
-      throw new SDKError(ErrorCode.LAYER_ALREADY_EXISTS, `Layer "${id}" already exists`);
+      throw new SDKError(
+        ErrorCode.LAYER_ALREADY_EXISTS,
+        `Layer "${id}" already exists`,
+      );
     }
   }
 
@@ -93,8 +96,10 @@ export class LayerManager {
 
   private validateProvider(provider: Cesium.ImageryProvider): void {
     if (!provider) {
-      throw new SDKError(ErrorCode.INVALID_OPTIONS, 'Imagery provider is required');
+      throw new SDKError(
+        ErrorCode.INVALID_OPTIONS,
+        "Imagery provider is required",
+      );
     }
   }
-
 }

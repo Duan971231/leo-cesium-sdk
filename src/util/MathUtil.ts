@@ -1,6 +1,6 @@
-import * as Cesium from 'cesium';
-import { WGS84Coordinate } from './CoordinateUtil';
-import { WGS84, DEG_TO_RAD } from '../common/Constants';
+import * as Cesium from "cesium";
+import { WGS84Coordinate } from "./CoordinateUtil";
+import { WGS84, DEG_TO_RAD } from "../common/Constants";
 
 export const MathUtil = {
   haversineDistance(a: WGS84Coordinate, b: WGS84Coordinate): number {
@@ -10,7 +10,8 @@ export const MathUtil = {
     const lat2 = b.latitude * DEG_TO_RAD;
     const sinDLat = Math.sin(dLat / 2);
     const sinDLon = Math.sin(dLon / 2);
-    const h = sinDLat * sinDLat + Math.cos(lat1) * Math.cos(lat2) * sinDLon * sinDLon;
+    const h =
+      sinDLat * sinDLat + Math.cos(lat1) * Math.cos(lat2) * sinDLon * sinDLon;
     return WGS84.A * 2 * Math.atan2(Math.sqrt(h), Math.sqrt(1 - h));
   },
 
@@ -24,11 +25,13 @@ export const MathUtil = {
     let total = 0;
     for (let i = 0; i < n; i++) {
       const j = (i + 1) % n;
-      total += (ring[j].longitude - ring[i].longitude) * DEG_TO_RAD
-        * (2 * Math.sin(ring[i].latitude * DEG_TO_RAD)
-          + Math.sin(ring[j].latitude * DEG_TO_RAD));
+      total +=
+        (ring[j].longitude - ring[i].longitude) *
+        DEG_TO_RAD *
+        (2 * Math.sin(ring[i].latitude * DEG_TO_RAD) +
+          Math.sin(ring[j].latitude * DEG_TO_RAD));
     }
-    return Math.abs(total * WGS84.A * WGS84.A / 3);
+    return Math.abs((total * WGS84.A * WGS84.A) / 3);
   },
 
   degToRad(deg: number): number {

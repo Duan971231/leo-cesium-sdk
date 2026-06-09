@@ -146,6 +146,7 @@ export class CesiumSDK extends EventEmitter<SDKEvents> {
     return this.viewer.getViewer();
   }
 
+  /** 确保 SDK 已初始化 */
   private ensureInitialized(): void {
     this.ensureNotDisposed();
     if (!this._initialized) {

@@ -1,4 +1,4 @@
-import { Logger } from './Logger';
+import { Logger, LogLevel } from "./Logger";
 
 type DisposableItem = { dispose?: () => void; destroy?: () => void };
 
@@ -8,14 +8,14 @@ export class DisposePool {
   private _disposed = false;
 
   constructor(logger?: Logger) {
-    this.logger = logger ?? new Logger('DisposePool', 2);
+    this.logger = logger ?? new Logger("DisposePool", LogLevel.WARN);
   }
 
   add(nameOrItem: string, item: DisposableItem): void;
   add(nameOrItem: DisposableItem): void;
   add(nameOrItem: string | DisposableItem, item?: DisposableItem): void {
     this.ensureAlive();
-    if (typeof nameOrItem === 'string') {
+    if (typeof nameOrItem === "string") {
       this.pool.set(nameOrItem, item!);
     } else {
       this.pool.set(`__anon_${this.pool.size}`, nameOrItem);
@@ -51,9 +51,9 @@ export class DisposePool {
 
   private safeDispose(item: DisposableItem, name: string): void {
     try {
-      if (typeof item.dispose === 'function') {
+      if (typeof item.dispose === "function") {
         item.dispose();
-      } else if (typeof item.destroy === 'function') {
+      } else if (typeof item.destroy === "function") {
         item.destroy();
       }
     } catch (e) {
@@ -63,7 +63,7 @@ export class DisposePool {
 
   private ensureAlive(): void {
     if (this._disposed) {
-      throw new Error('DisposePool has already been disposed');
+      throw new Error("DisposePool has already been disposed");
     }
   }
 }
