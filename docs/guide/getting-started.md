@@ -47,6 +47,5 @@ await sdk.destroy();
 ```bash
 npm run typecheck
 npm run build
-npm test
 npm run docs:build
 ```

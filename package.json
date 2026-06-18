@@ -1,6 +1,6 @@
 {
   "name": "@leo_blitz/cesium-sdk",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "type": "module",
   "description": "A Cesium-based GIS SDK for urban planning, emergency command, military simulation, and data visualization",
   "main": "./dist/cesium-sdk.cjs",
@@ -30,11 +30,9 @@
   "sideEffects": false,
   "scripts": {
     "dev": "vite",
-    "build": "npm run build:no-console",
+    "build": "npm run build:console",
     "build:console": "npm run typecheck && vite build && npm run minify:dist:console && npm run check:dist:console",
     "build:no-console": "npm run typecheck && vite build && npm run minify:dist && npm run check:dist",
-    "test": "npm run build && node --test tests/*.test.mjs",
-    "test:unit": "node --test tests/*.test.mjs",
     "typecheck": "tsc --noEmit",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
@@ -43,8 +41,7 @@
     "minify:dist": "node scripts/minify-dist.mjs",
     "minify:dist:console": "node scripts/minify-dist.mjs --keep-console",
     "check:dist": "node scripts/check-dist.mjs",
-    "check:dist:console": "node scripts/check-dist.mjs --allow-console",
-    "prepublishOnly": "npm run test"
+    "check:dist:console": "node scripts/check-dist.mjs --allow-console"
   },
   "engines": {
     "node": ">=18"

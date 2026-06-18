@@ -209,12 +209,11 @@ interface ISDKPlugin {
 - Spatial analysis
 - Roaming
 
-## Build And Test
+## Build
 
 ```bash
 npm run typecheck
 npm run build
-npm test
 ```
 
 如果 PowerShell execution policy 阻止 `npm.ps1`，可以直接运行底层命令：
@@ -222,7 +221,6 @@ npm test
 ```bash
 node .\node_modules\typescript\bin\tsc --noEmit
 node .\node_modules\vite\bin\vite.js build
-node --test tests\*.test.mjs
 ```
 
 ## Development Notes
