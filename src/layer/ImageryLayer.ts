@@ -2,7 +2,7 @@ import * as Cesium from "cesium";
 import { BaseLayer } from "./BaseLayer";
 import { LayerType } from "./LayerType";
 import { SDKError, ErrorCode } from "../common/SDKError";
-import { ValidationUtil } from "../util/ValidationUtil";
+import { ValidationUtil } from "../util/validation";
 
 export interface ImageryLayerOptions {
   url?: string;

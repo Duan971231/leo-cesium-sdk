@@ -4,7 +4,7 @@ import { ImageryLayer } from "./ImageryLayer";
 import { LayerType } from "./LayerType";
 import { Logger } from "../common/Logger";
 import { SDKError, ErrorCode } from "../common/SDKError";
-import { ValidationUtil } from "../util/ValidationUtil";
+import { ValidationUtil } from "../util/validation";
 
 export interface AddImageryLayerOptions {
   id?: string;

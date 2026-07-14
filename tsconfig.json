@@ -16,6 +16,7 @@
     "rootDir": "./src",
     "baseUrl": "./",
     "paths": {
+      "@/*": ["./src/*"],
       "cesium": ["./node_modules/cesium"]
     },
     "types": ["./types/index.d.ts"]

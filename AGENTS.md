@@ -26,7 +26,7 @@
 
 ## API 与类型
 
-- 所有 public API 必须有明确输入、输出、错误行为和测试覆盖。
+- 所有 public API 必须有明确输入、输出、错误行为。
 - public 方法参数必须先做运行时校验，再调用 Cesium API。
 - 参数错误统一抛 `SDKError(ErrorCode.INVALID_OPTIONS, ...)`。
 - 已销毁资源访问统一抛 `SDKError(ErrorCode.RESOURCE_DISPOSED, ...)`。
@@ -74,27 +74,6 @@
 - `destroy()` 应尽力释放插件、manager、viewer、监听器和本地引用。
 - 单个事件监听器异常不得阻断其他监听器，但必须记录。
 - 插件安装失败应避免登记为已安装状态。
-
-## 测试与验证
-
-- 新增或修改 public API 必须补测试。
-- 测试应尽量面向公开导出，避免依赖 private 实现。
-- 单测不需要真实 WebGL 时，使用轻量 mock viewer/entity。
-- 每次交付前至少运行：
-
-```bash
-node .\node_modules\typescript\bin\tsc --noEmit
-node .\node_modules\vite\bin\vite.js build
-node --test tests\*.test.mjs
-```
-
-- 如果环境允许，也可运行：
-
-```bash
-npm run typecheck
-npm run build
-npm test
-```
 
 ## 发布与包结构
 

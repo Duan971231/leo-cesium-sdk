@@ -4,7 +4,7 @@ import { Lifecycle } from "./Lifecycle";
 import { DisposePool } from "../common/DisposePool";
 import { Logger } from "../common/Logger";
 import { SDKError, ErrorCode } from "../common/SDKError";
-import { MemoryUtil } from "../util/MemoryUtil";
+import { MemoryUtil } from "../util/memory";
 
 export class ViewerManager {
   private viewer: Cesium.Viewer | null = null;

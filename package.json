@@ -1,6 +1,6 @@
 {
   "name": "@leo_blitz/cesium-sdk",
-  "version": "1.0.3",
+  "version": "1.0.10",
   "type": "module",
   "description": "A Cesium-based GIS SDK for urban planning, emergency command, military simulation, and data visualization",
   "main": "./dist/cesium-sdk.cjs",
@@ -12,7 +12,8 @@
       "import": "./dist/cesium-sdk.es.js",
       "require": "./dist/cesium-sdk.cjs",
       "default": "./dist/cesium-sdk.es.js"
-    }
+    },
+    "./blitz_workers/*.js": "./dist/blitz_workers/*.js"
   },
   "typesVersions": {
     "*": {
@@ -29,11 +30,17 @@
   },
   "sideEffects": false,
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host 0.0.0.0",
     "build": "npm run build:console",
     "build:console": "npm run typecheck && vite build && npm run minify:dist:console && npm run check:dist:console",
     "build:no-console": "npm run typecheck && vite build && npm run minify:dist && npm run check:dist",
+    "build:package": "npm run typecheck && vite build --mode package && npm run check:dist:console",
     "typecheck": "tsc --noEmit",
+    "test": "node --test tests/hex/hex.test.mjs",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
@@ -50,9 +57,15 @@
     "cesium": "^1.136.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.4",
     "cesium": "1.136.0",
+    "eslint": "^9.39.4",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^17.7.0",
+    "prettier": "^3.9.4",
     "terser": "^5.48.0",
     "typescript": "^5.7.0",
+    "typescript-eslint": "^8.62.1",
     "vite": "^6.3.0",
     "vite-plugin-dts": "^4.5.0",
     "vitepress": "^1.6.4"

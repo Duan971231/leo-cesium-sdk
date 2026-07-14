@@ -6,8 +6,8 @@ import { PolygonGraphic } from "./PolygonGraphic";
 import { GraphicType } from "./GraphicStyle";
 import { Logger } from "../common/Logger";
 import { SDKError, ErrorCode } from "../common/SDKError";
-import { ValidationUtil } from "../util/ValidationUtil";
-import type { WGS84Coordinate } from "../util/CoordinateUtil";
+import type { WGS84Coordinate } from "../util/coordinate";
+import { ValidationUtil } from "../util/validation";
 import type { PointStyle, PolylineStyle, PolygonStyle } from "./GraphicStyle";
 
 export class EntityManager {

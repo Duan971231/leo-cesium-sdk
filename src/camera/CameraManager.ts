@@ -3,8 +3,8 @@ import { Viewpoint, ViewpointData } from "./Viewpoint";
 import { Logger } from "../common/Logger";
 import { DisposePool } from "../common/DisposePool";
 import { SDKError, ErrorCode } from "../common/SDKError";
-import { ValidationUtil } from "../util/ValidationUtil";
-import type { WGS84Coordinate } from "../util/CoordinateUtil";
+import type { WGS84Coordinate } from "../util/coordinate";
+import { ValidationUtil } from "../util/validation";
 
 export interface FlyToOptions {
   duration?: number;

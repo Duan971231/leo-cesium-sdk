@@ -1,10 +1,10 @@
 import * as Cesium from "cesium";
 import { BaseGraphic } from "./BaseGraphic";
 import { GraphicType, PolygonStyle } from "./GraphicStyle";
-import { CoordinateUtil } from "../util/CoordinateUtil";
-import type { WGS84Coordinate } from "../util/CoordinateUtil";
-import { ColorUtil } from "../util/ColorUtil";
-import { ValidationUtil } from "../util/ValidationUtil";
+import { ColorUtil } from "../util/color";
+import { CoordinateUtil } from "../util/coordinate";
+import type { WGS84Coordinate } from "../util/coordinate";
+import { ValidationUtil } from "../util/validation";
 
 const DEFAULT_POLYGON_STYLE: Required<PolygonStyle> = {
   color: "#FFFFFF",
